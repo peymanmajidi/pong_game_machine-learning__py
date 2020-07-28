@@ -6,7 +6,7 @@ pygame.init()
 
 WIDTH = 1200
 HEIGHT = 600
-BORDER = 20
+BORDER = 30
 WHITE = pygame.Color("white")
 BLACK = pygame.Color("black")
 GREEN = pygame.Color("green")
@@ -35,6 +35,7 @@ class Ball:
         pygame.draw.circle(screen, color, (self.x, self.y), self.RADIUS)
         
     def update(self, paddle_y, paddle_WIDTH, paddle_HEIGHT):
+        global bonus_left, bonus_right
         newx = self.x + self.vx
         newy = self.y + self.vy
         
@@ -49,6 +50,28 @@ class Ball:
         self.x += self.vx
         self.y += self.vy
         self.show(ball_color)
+
+        if self.x <=0: 
+            self.show(bgColor)
+            bonus_right +=1
+            ball.x = WIDTH // 2
+            ball.y = HEIGHT // 2
+            self.show(GREEN)
+            pygame.display.flip()
+            pygame.time.delay(200)
+
+
+            
+        if self.x > WIDTH:
+            self.show(bgColor)
+            bonus_left +=1
+            ball.x = WIDTH // 2
+            ball.y = HEIGHT // 2
+            self.show(GREEN)
+            pygame.display.flip()
+            pygame.time.delay(200)
+
+
         
 #-------Paddle-------
 class Paddle:
@@ -77,13 +100,19 @@ user_paddle = Paddle(HEIGHT//2)
         
 ball = Ball(WIDTH - Ball.RADIUS - paddle.WIDTH, HEIGHT//2, -VELOCITY, -VELOCITY)
 
-def draw_ui():
-    #top border
-    pygame.draw.rect(screen, WHITE ,pygame.Rect((0,0),(WIDTH,BORDER)))
-    #bottom border
-    pygame.draw.rect(screen, WHITE ,pygame.Rect(0,HEIGHT - BORDER,WIDTH,BORDER))
+bonus_left = 0
+bonus_right = 0
 
-    pygame.draw.line(screen, WHITE, (WIDTH // 2, 0),( WIDTH//2, HEIGHT ))
+def draw_ui():
+    pygame.draw.rect(screen, WHITE ,pygame.Rect((0,0),(WIDTH,BORDER)))
+    pygame.draw.rect(screen, WHITE ,pygame.Rect(0,HEIGHT - BORDER,WIDTH,BORDER))
+    pygame.draw.line(screen, WHITE , ( WIDTH // 2, 0),( WIDTH//2, HEIGHT))
+
+    myfont = pygame.font.SysFont('tahoma', 20)
+    textsurface = myfont.render(f"Left: {bonus_left}" , False, (0, 0, 0))
+    screen.blit(textsurface,(0,0))
+    textsurface = myfont.render(f"Right: {bonus_right}" , False, (0, 0, 0))
+    screen.blit(textsurface,(WIDTH - textsurface.get_size()[0]  ,0))
 
 draw_ui()
 ball.show(ball_color)
@@ -120,7 +149,9 @@ while True:
     
     ball.update(paddle.y, paddle.WIDTH, paddle.HEIGHT)
 
-    paddle.update(shouldMove,WIDTH - Paddle.WIDTH)
+    if ball.vx > 0 and ( shouldMove < paddle.Y or shouldMove > paddle.Y + paddle.HEIGHT):
+        paddle.update(shouldMove,WIDTH - Paddle.WIDTH)
+        print(paddle.Y,":", shouldMove, ":", paddle.Y + paddle.HEIGHT)
     
     ball.update(user_paddle.y, user_paddle.WIDTH, user_paddle.HEIGHT)
     user_paddle.update(pygame.mouse.get_pos()[1],0)
