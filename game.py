@@ -57,6 +57,7 @@ class Paddle:
     
     def __init__(self,y):
         self.y = y
+
         
     def show(self, colour,x):
         pygame.draw.rect(screen, colour, pygame.Rect(x, self.y - self.HEIGHT//2,self.WIDTH,self.HEIGHT))
@@ -65,6 +66,10 @@ class Paddle:
         self.show(bgColor,x)
         self.y = mouse
         self.show(BLUE,x)
+
+    @property
+    def Y(self):
+        return self.y - self.HEIGHT//2
 
 paddle = Paddle(HEIGHT//2)
 
@@ -111,10 +116,11 @@ while True:
 
     draw_ui()
     toPredict = df.append({'x':ball.x, 'y':ball.y, 'vx': ball.vx, 'vy':ball.vy}, ignore_index=True)
-    shouldMove = clf.predict(toPredict)
+    shouldMove = int(clf.predict(toPredict))
     
     ball.update(paddle.y, paddle.WIDTH, paddle.HEIGHT)
-    paddle.update(int(shouldMove),WIDTH - Paddle.WIDTH)
+
+    paddle.update(shouldMove,WIDTH - Paddle.WIDTH)
     
     ball.update(user_paddle.y, user_paddle.WIDTH, user_paddle.HEIGHT)
     user_paddle.update(pygame.mouse.get_pos()[1],0)
