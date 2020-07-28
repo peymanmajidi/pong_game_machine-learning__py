@@ -1,4 +1,4 @@
-Inspired by [Computerphile](https://www.youtube.com/watch?v=JRLdbt7vK-E)
+Inspired by [Computerphile youtube video](https://www.youtube.com/watch?v=JRLdbt7vK-E)
 
 - Requirements:
 
@@ -9,6 +9,9 @@ Inspired by [Computerphile](https://www.youtube.com/watch?v=JRLdbt7vK-E)
     
 - How to use:
     
-    - WINDOWS: `python game.py`
-    - LINUX: `python3 game.py`
-    - OSX: `python3 game.py`
+    - WINDOWS: `python main.py`
+    - LINUX: `python3 main.py`
+    - OSX: `python3 main.py`
+
+
+![shot](shot.png)
